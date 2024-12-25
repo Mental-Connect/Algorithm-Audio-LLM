@@ -15,7 +15,7 @@ SERVER_URL = "ws://localhost:8001"
 SAMPLE_RATE = 16000
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-CHUNK_MS = 300 # 每帧音频时长 (ms)
+CHUNK_MS = 3000 # 每帧音频时长 (ms)
 CHUNK_SIZE = int(SAMPLE_RATE * 2 / 1000 * CHUNK_MS)  # 16000Hz采样率下每帧160ms的音频数据量
 
 async def send_audio_data(websocket, stream):

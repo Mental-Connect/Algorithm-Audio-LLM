@@ -9,8 +9,8 @@ from fastapi import FastAPI
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 
-from Service.handler.websocket_handler_baidu import handle_websocket_connection
-# from Service.handler.websocket_handler_offline import handle_websocket_connection
+# from Service.handler.websocket_handler_baidu import handle_websocket_connection
+from Service.handler.websocket_handler_offline import handle_websocket_connection
 from Service.config import *
 from Service.routers import chatbot
 
