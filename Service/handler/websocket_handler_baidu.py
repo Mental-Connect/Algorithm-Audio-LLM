@@ -5,8 +5,7 @@ import websockets
 import io
 import re 
 from services.websocket_service import BaiduService
-from services.offline_services import OfflineService
-from Service.common.processing import baidu_processing, offline_processing
+from Service.common.processing import baidu_processing
 from Service.common.audio_saving import save_audio_to_wav
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -21,12 +20,11 @@ async def handle_websocket_connection(websocket):
     print(f"New client connected: {websocket.remote_address}")
 
     # Create an instance of the BaiduService class
-    # service = BaiduService()
-    service = OfflineService()
+    service = BaiduService()
     audio_data_buffer = io.BytesIO()
 
     # Establish connection to Baidu service
-    # service.connect()
+    service.connect()
 
     try:
         async for message in websocket:
@@ -40,8 +38,7 @@ async def handle_websocket_connection(websocket):
             response = service.fetch_messages_from_queue()
             if response:
                 for res in response:
-                    # formatted_response = await baidu_processing(res)
-                    formatted_response = await offline_processing(res)
+                    formatted_response = await baidu_processing(res)
                     if formatted_response:
                         await websocket.send(json.dumps(formatted_response))
                         print(f"formatted response is:  {formatted_response}")
