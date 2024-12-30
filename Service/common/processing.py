@@ -70,13 +70,21 @@ async def offline_processing(response):
             
             # If there's no data, return an error
             if not data:
-                return {"error": "No transcription data found."}
+                return {
+                    "result": text,
+                    "start_time": 0,
+                    "end_time": 0,
+                    "err_msg":response.get("err", "No transcription data found ")
+                }
 
             # Assuming the data is nested, access the first item
             data = data[0][0] if isinstance(data[0], list) else data[0]
             
             text = data['text']
-            timestamp = data['timestamp']
+            try:
+                timestamp = data['timestamp']
+            except Exception as e:
+                print(f"Error: {e}")
 
             # If there are no timestamps, use default values (-1, -1)
             if not timestamp:
@@ -84,15 +92,21 @@ async def offline_processing(response):
                     "result": text,
                     "start_time": 0,
                     "end_time": 0,
-                    "err_msg":response.get("err", " ")
+                    "err_msg":response.get("err", "No Timestamp Found")
                 }
 
             # Ensure timestamp is a list of lists
             if isinstance(timestamp, list) and all(isinstance(t, list) for t in timestamp):
                 start_time = timestamp[0][0]  # First value of the first timestamp list
                 end_time = timestamp[-1][-1]  # Last value of the last timestamp list
+                
             else:
-                return {"error": "Invalid timestamp format."}
+                return {
+                    "result": text,
+                    "start_time": 0,
+                    "end_time": 0,
+                    "err_msg":response.get("err", "Invalid timestamp format.")
+                }
 
             # Return the processed data with text, start time, and end time
             return {
@@ -113,8 +127,18 @@ async def offline_processing(response):
                 }
 
         else:
-            return {"error": "Unknown message type."}
+            return {
+                    "result": " ",
+                    "start_time": -1,
+                    "end_time": -1,
+                    "err_msg":response.get("err", "Unknown message type. ")
+                }
 
     except Exception as e:
         # Handle unexpected errors and provide a message
-        return {"error": f"An error occurred: {e}"}
+        return {
+                    "result": " ",
+                    "start_time": -1,
+                    "end_time": -1,
+                    "err_msg":response.get("err", f"An error occurred: {e}")
+                }
