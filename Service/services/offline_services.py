@@ -1,6 +1,5 @@
 import logging
 import queue
-import threading
 import time
 
 from funasr import AutoModel
@@ -9,21 +8,22 @@ from funasr.utils.postprocess_utils import rich_transcription_postprocess
 # Configure logger
 logger = logging.getLogger(__name__)
 
-class OfflineService:
-    def __init__(self):
-        self.message_queue = queue.Queue()  # Queue to receive and process messages
-        self.model = AutoModel(
+model = AutoModel(
             model='paraformer-zh', kwargs={"disable_update": True, "device": "cpu"},
             vad_model="fsmn-vad", vad_kwargs={"max_single_segment_time": 30000},
             spk_model="cam++", spk_model_revision="v2.0.2", punc_model="ct-punc"
         )
+
+class OfflineService:
+    def __init__(self):
+        self.message_queue = queue.Queue()  # Queue to receive and process messages
 
     def send_audio(self, audio_sample: bytes):
         """Process the audio sample using the offline model"""
         try:
             logger.info(f"Processing audio sample of length: {len(audio_sample)}")
             # Call the offline model to process the audio and get the transcribed text
-            text = offline_model(audio_sample, self.model)  # Call your offline model
+            text = offline_model(audio_sample, model)  # Call your offline model
             self.message_queue.put({
                 "type": "TRANSCRIPT",  # Tag this message as transcribed text
                 "data": text,
