@@ -6,7 +6,6 @@ import uuid
 
 import websocket
 
-
 logger = logging.getLogger(__name__)
 
 # WebSocket URI for Baidu Real-Time ASR Service
