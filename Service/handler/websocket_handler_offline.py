@@ -4,11 +4,12 @@ import websockets
 
 import io
 import re 
-from services.offline_services import OfflineService
+from Service.services.offline_services import OfflineService
 from Service.common.processing import offline_processing
 from Service.common.audio_saving import save_audio_to_wav
+from Service.logging.logging import get_logger
 # Configure logger
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 async def handle_websocket_connection(websocket):
     """
@@ -17,7 +18,7 @@ async def handle_websocket_connection(websocket):
     :param websocket: The WebSocket connection object for the client.
     :param path: The WebSocket request path.
     """
-    print(f"New client connected: {websocket.remote_address}")
+    logger.info(f"New client connected: {websocket.remote_address}")
 
     # Create an instance of the offlineService class
     service = OfflineService()
@@ -26,7 +27,7 @@ async def handle_websocket_connection(websocket):
 
     try:
         async for message in websocket:
-            print(f"received audio data from client, length: {len(message)}")
+            logger.info(f"received audio data from client, length: {len(message)}")
 
             # Send the audio data received from the client to the offline service
             audio_data_buffer.write(message)
@@ -39,15 +40,15 @@ async def handle_websocket_connection(websocket):
                     formatted_response = await offline_processing(res)
                     if formatted_response:
                         await websocket.send(json.dumps(formatted_response))
-                        print(f"formatted response is:  {formatted_response}")
+                        logger.info(f"formatted response is:  {formatted_response}")
                     else:
-                        print("No response received from model")
+                        logger.info("No response received from model")
 
         audio_data_buffer.seek(0)  # Reset the buffer pointer to the beginning
         save_audio_to_wav(audio_data_buffer,websocket)
 
     except websockets.ConnectionClosed:
-        print(f"Connection with {websocket.remote_address} closed.")
+        logger.info(f"Connection with {websocket.remote_address} closed.")
         service.send_finish()
         # Log if the WebSocket connection with the client is closed
 
