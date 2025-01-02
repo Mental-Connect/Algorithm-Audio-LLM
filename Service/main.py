@@ -21,14 +21,7 @@ logger = get_logger()
 
 # Initialize FastAPI app and include router
 app = FastAPI()
-# Allow connections from any origin (or adjust to allow specific ones)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Adjust this as needed
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 app.include_router(chatbot.router)
 
 # WebSocket service startup function
