@@ -13,7 +13,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 # from Service.handler.websocket_handler_baidu import handle_websocket_connection
 from Service.logging.logging import get_logger
 from Service.handler.websocket_handler_offline import handle_websocket_connection
-from fastapi.middleware.cors import CORSMiddleware
 from Service.config import *
 from Service.routers import chatbot
 
