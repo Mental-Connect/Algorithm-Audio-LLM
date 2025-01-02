@@ -1,7 +1,8 @@
 import json
+from Service.logging.logging import get_logger
 import logging
 
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 async def baidu_processing(response):
     try:
@@ -62,6 +63,7 @@ async def baidu_processing(response):
 
 async def offline_processing(response):
     try:
+        logger.info(f"Processing response: {response} (Type: {type(response)})")
         message_type = response.get('type')
 
         if message_type == "TRANSCRIPT":
@@ -70,6 +72,7 @@ async def offline_processing(response):
             
             # If there's no data, return an error
             if not data:
+                logger.error(f"No transcription data found")
                 return {
                     "result": text,
                     "start_time": 0,
@@ -84,7 +87,7 @@ async def offline_processing(response):
             try:
                 timestamp = data['timestamp']
             except Exception as e:
-                print(f"Error: {e}")
+                logger.error(f"Error: {e}")
 
             # If there are no timestamps, use default values (-1, -1)
             if not timestamp:
@@ -101,6 +104,7 @@ async def offline_processing(response):
                 end_time = timestamp[-1][-1]  # Last value of the last timestamp list
                 
             else:
+                logger.error(f"Invalid timestamp format.")
                 return {
                     "result": text,
                     "start_time": 0,
@@ -118,7 +122,7 @@ async def offline_processing(response):
 
         elif message_type == "ERROR":
             # Handle the heartbeat message
-            print("Error Occurred ")
+            logging.error("Error Occurred ")
             return {
                     "result": " ",
                     "start_time": -1,

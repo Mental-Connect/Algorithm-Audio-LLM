@@ -4,12 +4,13 @@ import time
 
 from funasr import AutoModel
 from funasr.utils.postprocess_utils import rich_transcription_postprocess
+from Service.logging.logging import get_logger
 
 # Configure logger
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 model = AutoModel(
-            model='paraformer-zh', kwargs={"disable_update": True, "device": "cpu"},
+            model='paraformer-zh',
             vad_model="fsmn-vad", vad_kwargs={"max_single_segment_time": 30000},
             spk_model="cam++", spk_model_revision="v2.0.2", punc_model="ct-punc"
         )
