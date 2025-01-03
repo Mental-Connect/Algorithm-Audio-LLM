@@ -50,6 +50,12 @@ class OfflineService:
         try:
             logger.info(f"Processing audio sample of length: {len(audio_sample)}")
             audio_data = self.base_audio_data + audio_sample
+            
+            # The audio data can not be too small, otherwise it will generate issue.
+            if(len(audio_data) < 1000):
+                self.base_audio_data += audio_sample
+                return
+            
             result = offline_model(audio_data, model)
 
             if len(result) == 0 or result[0]['text'] == '':
