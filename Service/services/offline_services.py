@@ -1,12 +1,12 @@
-import logging
 import queue
 import re
 
 from funasr import AutoModel
 from funasr.utils.postprocess_utils import rich_transcription_postprocess
+from Service.logging.logging import get_logger
 
 # Configure logger
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 model = AutoModel(
             model='paraformer-zh',

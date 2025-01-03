@@ -17,7 +17,7 @@ async def handle_websocket_connection(websocket):
     :param websocket: The WebSocket connection object for the client.
     :param path: The WebSocket request path.
     """
-    print(f"New client connected: {websocket.remote_address}")
+    logger.info(f"New client connected: {websocket.remote_address}")
 
     # Create an instance of the offlineService class
     service = OfflineService()
