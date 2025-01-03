@@ -21,7 +21,7 @@ app.include_router(chatbot.router)
 # WebSocket service startup function
 async def start_websocket_service():
     """Start the WebSocket service."""
-    server = await websockets.serve(handle_websocket_connection, "localhost", 8001)
+    server = await websockets.serve(handle_websocket_connection, "0.0.0.0", 8001)
     print("WebSocket Service is running!")
     await server.wait_closed()
 

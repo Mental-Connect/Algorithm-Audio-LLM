@@ -60,61 +60,7 @@ async def baidu_processing(response):
         logger.error(f"Unexpected error in processing: {e}")
         return None 
 
+
+
 async def offline_processing(response):
-    try:
-        message_type = response.get('type')
-
-        if message_type == "TRANSCRIPT":
-            # Extract the data section for the transcription
-            data = response.get('data', [])
-            
-            # If there's no data, return an error
-            if not data:
-                return {"error": "No transcription data found."}
-
-            # Assuming the data is nested, access the first item
-            data = data[0][0] if isinstance(data[0], list) else data[0]
-            
-            text = data['text']
-            timestamp = data['timestamp']
-
-            # If there are no timestamps, use default values (-1, -1)
-            if not timestamp:
-                return {
-                    "result": text,
-                    "start_time": 0,
-                    "end_time": 0,
-                    "err_msg":response.get("err", " ")
-                }
-
-            # Ensure timestamp is a list of lists
-            if isinstance(timestamp, list) and all(isinstance(t, list) for t in timestamp):
-                start_time = timestamp[0][0]  # First value of the first timestamp list
-                end_time = timestamp[-1][-1]  # Last value of the last timestamp list
-            else:
-                return {"error": "Invalid timestamp format."}
-
-            # Return the processed data with text, start time, and end time
-            return {
-                "result": text,
-                "start_time": start_time,
-                "end_time": end_time,
-                "err_msg":response.get("err", " ")
-            }
-
-        elif message_type == "ERROR":
-            # Handle the heartbeat message
-            print("Error Occurred ")
-            return {
-                    "result": " ",
-                    "start_time": -1,
-                    "end_time": -1,
-                    "err_msg":response.get("err", " ")
-                }
-
-        else:
-            return {"error": "Unknown message type."}
-
-    except Exception as e:
-        # Handle unexpected errors and provide a message
-        return {"error": f"An error occurred: {e}"}
+    return response

@@ -15,14 +15,14 @@ SERVER_URL = "ws://localhost:8001"
 SAMPLE_RATE = 16000
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-CHUNK_MS = 3000 # 每帧音频时长 (ms)
-CHUNK_SIZE = int(SAMPLE_RATE * 2 / 1000 * CHUNK_MS)  # 16000Hz采样率下每帧160ms的音频数据量
+CHUNK_MS = 1500 # 每帧音频时长 (ms)
+CHUNK_SIZE = int(SAMPLE_RATE * 1 / 1000 * CHUNK_MS)  # 16000Hz采样率下每帧160ms的音频数据量
 
 async def send_audio_data(websocket, stream):
     while True:
         # 从麦克风读取音频数据
         audio_data = stream.read(CHUNK_SIZE)
-        logger.debug(f"Sent audio frame of size: {len(audio_data)}")
+        # logger.debug(f"Sent audio frame of size: {len(audio_data)}")
         
         # 发送音频数据给服务器
         await websocket.send(audio_data)
@@ -34,12 +34,13 @@ async def receive_server_data(websocket):
     while True:
         try:
             # 等待服务器的响应
-            response = await asyncio.wait_for(websocket.recv(), timeout=2)
+            response = await asyncio.wait_for(websocket.recv(), timeout=5)
             response = json.loads(response)
             print(f"Received from server: {response}")
         except asyncio.TimeoutError:
             # 超时处理
             logger.warning("No response from server.")
+            continue
 
 async def send_audio_data_to_server():
     async with websockets.connect(SERVER_URL) as websocket:
