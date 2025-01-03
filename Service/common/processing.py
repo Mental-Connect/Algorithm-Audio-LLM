@@ -1,7 +1,7 @@
 import json
-import logging
+from Service.logging.logging import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 async def baidu_processing(response):
     try:

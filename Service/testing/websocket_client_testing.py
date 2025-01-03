@@ -22,7 +22,7 @@ async def send_audio_data(websocket, stream):
     while True:
         # 从麦克风读取音频数据
         audio_data = stream.read(CHUNK_SIZE)
-        # logger.debug(f"Sent audio frame of size: {len(audio_data)}")
+        logger.debug(f"Sent audio frame of size: {len(audio_data)}")
         
         # 发送音频数据给服务器
         await websocket.send(audio_data)
@@ -40,7 +40,6 @@ async def receive_server_data(websocket):
         except asyncio.TimeoutError:
             # 超时处理
             logger.warning("No response from server.")
-            continue
 
 async def send_audio_data_to_server():
     async with websockets.connect(SERVER_URL) as websocket:

@@ -9,7 +9,7 @@ from funasr.utils.postprocess_utils import rich_transcription_postprocess
 logger = logging.getLogger(__name__)
 
 model = AutoModel(
-            model='paraformer-zh', kwargs={"disable_update": True, "device": "cpu"},
+            model='paraformer-zh',
             vad_model="fsmn-vad", vad_kwargs={"max_single_segment_time": 30000},
             spk_model="cam++", spk_model_revision="v2.0.2", punc_model="ct-punc"
         )
