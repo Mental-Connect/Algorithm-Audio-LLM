@@ -6,6 +6,7 @@ import io
 from services.websocket_service import BaiduService
 from Service.common.processing import baidu_processing
 from Service.common.audio_saving import save_audio_to_wav
+
 # Configure logger
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ async def handle_websocket_connection(websocket):
 
     try:
         async for message in websocket:
-            print(f"received audio data from client, length: {len(message)}")
+            logger.info(f"received audio data from client, length: {len(message)}")
 
             # Send the audio data received from the client to the Baidu service
             audio_data_buffer.write(message)
@@ -44,11 +45,11 @@ async def handle_websocket_connection(websocket):
                     else:
                         print("No response received from model")
 
-        audio_data_buffer.seek(0)  # Reset the buffer pointer to the beginning
-        save_audio_to_wav(audio_data_buffer,websocket)
-
     except websockets.ConnectionClosed:
-        print(f"Connection with {websocket.remote_address} closed.")
+        logger.info(f"Connection with {websocket.remote_address} closed.")
+        
+    finally:
         service.send_finish()
-        # Log if the WebSocket connection with the client is closed
+        audio_data_buffer.seek(0)  # Reset the buffer pointer to the beginning
+        save_audio_to_wav(audio_data_buffer)
 

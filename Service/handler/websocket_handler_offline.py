@@ -22,15 +22,14 @@ async def handle_websocket_connection(websocket):
     # Create an instance of the offlineService class
     service = OfflineService()
     audio_data_buffer = io.BytesIO()
-
-
+        
     try:
         async for message in websocket:
             logger.info(f"received audio data from client, length: {len(message)}")
 
             # Send the audio data received from the client to the offline service
-            audio_data_buffer.write(message)
             service.send_audio(message)
+            audio_data_buffer.write(message)
 
             # Retrieve response from the offline service (in this case, from the queue)
             response = service.fetch_messages_from_queue()
@@ -43,11 +42,16 @@ async def handle_websocket_connection(websocket):
                     else:
                         logger.info("No response received from model")
 
-        audio_data_buffer.seek(0)  # Reset the buffer pointer to the beginning
-        save_audio_to_wav(audio_data_buffer,websocket)
-
     except websockets.ConnectionClosed:
         logger.info(f"Connection with {websocket.remote_address} closed.")
         service.send_finish()
         # Log if the WebSocket connection with the client is closed
+    
+    finally:
+        audio_data_buffer.seek(0)  # Reset the buffer pointer to the beginning
+        save_audio_to_wav(audio_data_buffer)
+
+
+
+
 
