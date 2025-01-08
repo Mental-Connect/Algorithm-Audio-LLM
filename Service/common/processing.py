@@ -1,6 +1,5 @@
 import json
 from Service.logging.logging import get_logger
-import logging
 
 logger = get_logger()
 
@@ -61,88 +60,7 @@ async def baidu_processing(response):
         logger.error(f"Unexpected error in processing: {e}")
         return None 
 
+
+
 async def offline_processing(response):
-    try:
-        logger.info(f"Processing response: {response} (Type: {type(response)})")
-        message_type = response.get('type')
-
-        if message_type == "TRANSCRIPT":
-            # Extract the data section for the transcription
-            data = response.get('data', [])
-            
-            # If there's no data, return an error
-            if not data:
-                logger.error(f"No transcription data found")
-                return {
-                    "result": text,
-                    "start_time": 0,
-                    "end_time": 0,
-                    "err_msg":response.get("err", "No transcription data found ")
-                }
-
-            # Assuming the data is nested, access the first item
-            data = data[0][0] if isinstance(data[0], list) else data[0]
-            
-            text = data['text']
-            try:
-                timestamp = data['timestamp']
-            except Exception as e:
-                logger.error(f"Error: {e}")
-
-            # If there are no timestamps, use default values (-1, -1)
-            if not timestamp:
-                return {
-                    "result": text,
-                    "start_time": 0,
-                    "end_time": 0,
-                    "err_msg":response.get("err", "No Timestamp Found")
-                }
-
-            # Ensure timestamp is a list of lists
-            if isinstance(timestamp, list) and all(isinstance(t, list) for t in timestamp):
-                start_time = timestamp[0][0]  # First value of the first timestamp list
-                end_time = timestamp[-1][-1]  # Last value of the last timestamp list
-                
-            else:
-                logger.error(f"Invalid timestamp format.")
-                return {
-                    "result": text,
-                    "start_time": 0,
-                    "end_time": 0,
-                    "err_msg":response.get("err", "Invalid timestamp format.")
-                }
-
-            # Return the processed data with text, start time, and end time
-            return {
-                "result": text,
-                "start_time": start_time,
-                "end_time": end_time,
-                "err_msg":response.get("err", " ")
-            }
-
-        elif message_type == "ERROR":
-            # Handle the heartbeat message
-            logging.error("Error Occurred ")
-            return {
-                    "result": " ",
-                    "start_time": -1,
-                    "end_time": -1,
-                    "err_msg":response.get("err", " ")
-                }
-
-        else:
-            return {
-                    "result": " ",
-                    "start_time": -1,
-                    "end_time": -1,
-                    "err_msg":response.get("err", "Unknown message type. ")
-                }
-
-    except Exception as e:
-        # Handle unexpected errors and provide a message
-        return {
-                    "result": " ",
-                    "start_time": -1,
-                    "end_time": -1,
-                    "err_msg":response.get("err", f"An error occurred: {e}")
-                }
+    return response
