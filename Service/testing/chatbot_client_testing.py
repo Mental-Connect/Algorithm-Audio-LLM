@@ -26,6 +26,13 @@ def get_context():
         content = file.read()
         return content
 
+
+def get_context():
+    # 打开文件并读取内容
+    with open(r'C:\Users\Administrator\Desktop\LLM\context.txt', 'r', encoding='utf-8') as file:
+        content = file.read()
+        return content
+
 # 构造请求数据
 def create_chatbot_request():
   

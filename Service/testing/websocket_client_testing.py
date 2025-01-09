@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 SERVER_URL = "ws://121.41.3.58:8001"
 
+# SERVER_URL = "ws://121.41.3.58:8001"
+
 # 音频相关设置
 SAMPLE_RATE = 16000
 FORMAT = pyaudio.paInt16
