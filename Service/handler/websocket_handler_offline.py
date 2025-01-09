@@ -10,29 +10,40 @@ from Service.logging.logging import get_logger
 # Configure logger
 logger = get_logger()
 
-async def send_heartbeat(websocket, message_queue):
-    """Send a heartbeat message every 5 seconds for each WebSocket connection"""
-    while True:
-        heartbeat_message = {
-            "type": "HEARTBEAT",
-            "text": "",
-            "start_time": -1,
-            "end_time": -1,
-            "err": "OK"
-        }
-        await asyncio.sleep(5)
-        print(f"Sending heartbeat message to queue for {websocket.remote_address}.")
-        await message_queue.put(heartbeat_message)  # Add heartbeat to the queue
+# 心跳间隔时间（5秒）
+HEARTBEAT_INTERVAL = 5
 
-async def process_and_send_messages(websocket, message_queue):
-    """This task continuously sends messages from the queue to the WebSocket."""
+async def send_heartbeat(websocket):
     while True:
-        message = await message_queue.get()  # Get the next message from the queue
-        await websocket.send(json.dumps(message))  # Send the message to the WebSocket
-        print(f"Data sent to websocket {websocket.remote_address}")
+        try:
+            # 发送心跳消息
+            # 创建心跳消息
+            heartbeat_message = {
+                "type": "HEARTBEAT",
+                "text": "",
+                "start_time": -1,
+                "end_time": -1,
+                "err": "OK"
+            }
+            message = json.dumps(heartbeat_message)
+            await websocket.send(message)
 
-async def handle_websocket_connection(websocket, path):
-    """Handles the WebSocket connection from the client and communicates with the offline service."""
+        except websockets.exceptions.ConnectionClosed:
+            print("Connection closed.")
+            break
+        await asyncio.sleep(HEARTBEAT_INTERVAL)
+
+async def handle_websocket_connection(websocket):
+
+    # 启动心跳发送任务
+    asyncio.create_task(send_heartbeat(websocket))
+
+    """
+    Handles the WebSocket connection from the client and communicates with the offline service.
+    
+    :param websocket: The WebSocket connection object for the client.
+    :param path: The WebSocket request path.
+    """
     logger.info(f"New client connected: {websocket.remote_address}")
 
     # Create an instance of the offlineService class

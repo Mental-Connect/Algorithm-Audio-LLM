@@ -11,11 +11,13 @@ logger = logging.getLogger(__name__)
 # WebSocket 服务器地址
 SERVER_URL = "ws://localhost:8001"
 
+# SERVER_URL = "ws://121.41.3.58:8001"
+
 # 音频相关设置
 SAMPLE_RATE = 16000
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-CHUNK_MS = 1500 # 每帧音频时长 (ms)
+CHUNK_MS = 2500 # 每帧音频时长 (ms)
 CHUNK_SIZE = int(SAMPLE_RATE * 1 / 1000 * CHUNK_MS)  # 16000Hz采样率下每帧160ms的音频数据量
 
 async def send_audio_data(websocket, stream):
