@@ -23,7 +23,6 @@ async def send_audio_data(websocket, stream):
         # 从麦克风读取音频数据
         audio_data = stream.read(CHUNK_SIZE)
         logger.debug(f"Sent audio frame of size: {len(audio_data)}")
-        
         # 发送音频数据给服务器
         await websocket.send(audio_data)
 
