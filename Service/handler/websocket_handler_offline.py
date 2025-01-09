@@ -1,3 +1,4 @@
+import asyncio
 import json
 import websockets
 
@@ -10,7 +11,34 @@ from Service.logging.logging import get_logger
 # Configure logger
 logger = get_logger()
 
+# 心跳间隔时间（5秒）
+HEARTBEAT_INTERVAL = 5
+
+async def send_heartbeat(websocket):
+    while True:
+        try:
+            # 发送心跳消息
+            # 创建心跳消息
+            heartbeat_message = {
+                "type": "HEARTBEAT",
+                "text": "",
+                "start_time": -1,
+                "end_time": -1,
+                "err": "OK"
+            }
+            message = json.dumps(heartbeat_message)
+            await websocket.send(message)
+
+        except websockets.exceptions.ConnectionClosed:
+            print("Connection closed.")
+            break
+        await asyncio.sleep(HEARTBEAT_INTERVAL)
+
 async def handle_websocket_connection(websocket):
+
+    # 启动心跳发送任务
+    asyncio.create_task(send_heartbeat(websocket))
+
     """
     Handles the WebSocket connection from the client and communicates with the offline service.
     
