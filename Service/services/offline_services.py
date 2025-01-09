@@ -1,5 +1,4 @@
 import queue
-import re
 
 from funasr import AutoModel
 from funasr.utils.postprocess_utils import rich_transcription_postprocess
@@ -26,24 +25,6 @@ class OfflineService:
         self.last_text = ""
         self.same_with_last_text_cnt = 0
 
-    def __get_period_count(self, text: str):
-        return text.count('。') + text.count('.')
-
-
-    def __get_valid_text(self, text: str):
-        pattern = r'[。.]'
-        matches = list(re.finditer(pattern, text))
-        if len(matches) < 2:
-            return "没有足够的句号"
-
-        second_last_period_index = matches[-2].end()
-        return text[:second_last_period_index]
-
-
-    def __get_text_words(self, text: str):
-        return re.findall(r"[a-zA-Z']+|[\u4e00-\u9fa5]", text)
-    
-
     def __is_complete_sentence(self, sentence: str) -> bool:
         sentence = sentence.strip()
         return sentence.endswith(('.', '。', '?', '？'))
@@ -64,10 +45,8 @@ class OfflineService:
             result = offline_model(audio_cache, model)
 
             if len(result) == 0 or result[0]['text'] == '':
-                self.send_heartbeat()
                 return
             
-            print("-----------------result: ", result)
             text = result[0]['text']  
             sentence_info_list = result[0]['sentence_info']
 
