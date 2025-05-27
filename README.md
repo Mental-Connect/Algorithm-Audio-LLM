@@ -135,3 +135,5 @@ j) **model_sampling_rate**: 模型接受的采样率。
 apt-get install -y ffmpeg && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/**
+
+运行时,在4核情况下至少需要有11G空闲内存可使用,否则可能导致服务器宕机

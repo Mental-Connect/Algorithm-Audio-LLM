@@ -10,7 +10,7 @@ logger = get_logger()
 model = AutoModel(
             model='paraformer-zh',
             vad_model="fsmn-vad", vad_kwargs={"max_single_segment_time": 30000},
-            spk_model="cam++", spk_model_revision="v2.0.2", punc_model="ct-punc"
+            spk_model="cam++", spk_model_revision="v2.0.2", punc_model="ct-punc", device="cuda"
         )
 
 class OfflineService:
