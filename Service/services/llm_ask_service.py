@@ -6,11 +6,12 @@ from Service.model.entity import EntityType, entity_enum_values
 from Service.model.intent import IntentType, intent_enum_values
 
 # 和大语言模型聊天
-async def llm_ask_service(request: LLMAskRequest) -> str:
+async def llm_ask(request: LLMAskRequest) -> str:
     try:
-        e = get_entity(request=request)
-        intent_type = get_intent(request=request)
+        e = await get_entity(request=request)
+        intent_type = await get_intent(request=request)
         print(e.user_name)
+        print(intent_type)
     except:
         raise "Error Uploading the transcription."
     return e

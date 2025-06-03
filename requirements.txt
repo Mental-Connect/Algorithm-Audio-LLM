@@ -17,3 +17,4 @@ scipy == 1.13.0
 PyAudio==0.2.14
 scipy==1.14.1
 websocket-client==1.8.0
+faiss-cpu==1.26.4
