@@ -17,7 +17,8 @@ async def chat_model(request: ChatbotRequest):
     except:
         return ChatbotResponse(response="Error in chatbot api")
 
-# 和大语言模型聊天, 知道用户(老师)的id和学校
+# 和大语言模型聊天, 需要传入用户(老师)的id和学校
+@router.post("/llmAsk", response_model=ChatbotResponse)
 async def llm_ask_model(request: LLMAskRequest) -> ChatbotResponse:
     try:
         answer = await llm_ask(request)
