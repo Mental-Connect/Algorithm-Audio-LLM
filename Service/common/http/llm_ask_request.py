@@ -1,7 +1,7 @@
 ﻿from pydantic import BaseModel
 
 # Define a Pydantic model to validate and serialize input data for chatbot requests
-class LLMAskRequest:    
+class LLMAskRequest(BaseModel):    
     # The context or background information to assist the chatbot in understanding the query
     context: str
     
