@@ -16,7 +16,7 @@ async def llm_ask(request: LLMAskRequest) -> str:
     return e
 
 # 意图识别提示词
-intent_prompt = f"请判断用户的意图, 仅从以下类别中选择一个: f{', '.join(intent_enum_values)}.不要解释,也不要输入除枚举值以外的任何东西"
+intent_prompt = f"请判断用户的意图, 仅从以下类别中选择一个: f{', '.join(intent_enum_values)}.不要解释,也不要输入除枚举值以外的任何东西.\n:用户文本:{input}"
 
 # 判断意图
 async def get_intent(request: LLMAskRequest) -> IntentType:
@@ -27,7 +27,7 @@ async def get_intent(request: LLMAskRequest) -> IntentType:
     return IntentType(response_text)
 
 # 实体提取提示词
-entity_prompt = f"你是一个信息抽取助手,任务是从用于输入的文本中提取有用的实体信息. 请从输入文本中提取出实体,并用json格式输出,字段包括: f{', '.join(entity_enum_values)}.不要解释,也不要输入除json以外的任何东西, 如果没有某些字段,值设为null"
+entity_prompt = f"你是一个信息抽取助手,任务是从用于输入的文本中提取有用的实体信息. 请从输入文本中提取出实体,并用json格式输出,字段包括: f{', '.join(entity_enum_values)}.不要解释,也不要输入除json以外的任何东西, 如果没有某些字段,值设为null.\n输入的文本:{input}"
 
 # 获取实体
 async def get_entity(request: LLMAskRequest) -> Entity:
