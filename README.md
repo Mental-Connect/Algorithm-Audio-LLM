@@ -135,3 +135,9 @@ j) **model_sampling_rate**: 模型接受的采样率。
 apt-get install -y ffmpeg && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/**
+
+## 心语小智
+
+对于传入的消息,使用如下处理流程
+```text
+[开始] --> [意图识别]  --> [实体提取] --> [数据库实体搜索]  --> [知识搜索]  --> [prompt构建] --> [询问llm]
