@@ -6,12 +6,11 @@ from Service.model.entity import EntityType, entity_enum_values
 from Service.model.intent import IntentType, intent_enum_values
 
 # 和大语言模型聊天
+# request 学校, 用户, 消息, 上下文
 async def llm_ask(request: LLMAskRequest) -> str:
     try:
-        e = await get_entity(request=request)
         intent_type = await get_intent(request=request)
-        print(e.user_name)
-        print(intent_type)
+        e = await get_entity(request=request)
     except:
         raise "Error Uploading the transcription."
     return e
@@ -40,3 +39,27 @@ async def get_entity(request: LLMAskRequest) -> Entity:
     except:
         raise "Error Uploading the transcription."
     return e
+
+# 生成个人报告
+def generate_report():
+    pass
+
+# 获取用户基本信息
+def get_user_info():
+    pass
+
+# 闲聊
+def chit_chat():
+    pass
+
+# 查询预约信息
+def get_appointment():
+    pass
+
+# 查询访谈信息
+def get_interview():
+    pass
+
+# 姓名处理
+def user_name_process() -> list[str]:
+    pass
