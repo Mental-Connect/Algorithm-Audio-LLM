@@ -136,4 +136,19 @@ apt-get install -y ffmpeg && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/**
 
+
+## 容器化部署
+1. 需要modelscope文件夹放到主文件夹下
+2. 生成(保存?)镜像
+``` bash
+docker build -t algorithm-llm;
+docker save -o algorithm-llm .;
+```
+3. 运行镜像
+3.1 准备服务器环境
+安装cuda, docker对gpu的环境支持
+3.2 带gpu参数运行容器
+``` bash
+ docker run -d --name algorithm-llm-audio-fastapi --restart=unless-stopped -p 8000:8000 -p 8001:8001 --gpus all  algorithm-llm
+```
 运行时,在4核情况下至少需要有11G空闲内存可使用,否则可能导致服务器宕机
