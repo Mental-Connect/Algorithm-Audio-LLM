@@ -3,7 +3,7 @@ from Service.common.constants import mongo_connect_str
 from Service.common.constants import default_db
 
 
-class database_manager():
+class DatabaseManager():
     school_user_collection_prefix = "school_user_"
     account_collection = "account"
     def __init__(self) -> None:
@@ -71,8 +71,8 @@ class database_manager():
         return collection.find_one({"_id":id})
         
     # 获取所有学校中包含的所有姓名
-    # 返回一个字典,字典中包含所有的学校和其中所有学生姓名
-    def get_names(self) -> {str,list[str]}:
+    # 返回一个字典,字典中包含所有的学校和其中所有学生姓名,进行了去重
+    def get_student_names(self) -> {str,list[str]}:
         results = {}
         user_name_parameter = "name"
         user_collection_names = self.get_user_collection_names()
@@ -80,10 +80,13 @@ class database_manager():
             collection = self.db[collection_name]
             school_id = collection_name.replace(self.school_user_collection_prefix, "")
             user_names = collection.find({},{"_id":0, user_name_parameter:1})
-            results[school_id] = [doc[user_name_parameter] for doc in user_names if user_name_parameter in doc]
+            results[school_id] = list({doc[user_name_parameter] for doc in user_names if user_name_parameter in doc})
         return results
     
     # 获取所有school_user表
     def get_user_collection_names(self):
         collection_names = self.db.list_collection_names()
         return [name for name in collection_names if name.startswith(self.school_user_collection_prefix)]
+
+# 数据库单例
+databae_manager = DatabaseManager()
