@@ -11,12 +11,13 @@ async def llm_chat(request: LLMChatRequest) -> str:
     # 1.意图识别
     intent_type = await __get_intent(request=request)
     # 当意图为查询预约咨询信息时
-    if intent_type is IntentEnum.Appointment:
-        __get_appointment()
-    # if intent_type is ...
-    #     ...
+    match intent_type:
+        case IntentEnum.Appointment:
+            __get_appointment()
+        # case IntentEnum. ...
+        #     ...
         
-     # todo 2.实体提取
+    # todo 2.实体提取
     # todo 3.数据查询
     # todo 4.知识检索
     # todo 5.构建prompt
