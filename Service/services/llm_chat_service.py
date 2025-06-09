@@ -1,6 +1,6 @@
 ﻿import json
 from xml.dom.minidom import Entity
-from Service.common.http.llm_ask_request import LLMChatRequest
+from Service.common.http.llm_chat_request import LLMChatRequest
 from Service.model.chatbot import chatbot
 from Service.model.entity import EntityEnum, entity_enum_values
 from Service.model.intent_enum import IntentEnum, intent_enum_values
