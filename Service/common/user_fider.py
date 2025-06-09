@@ -1,6 +1,6 @@
 ﻿
 # 姓名查询和匹配
-class NameMatcher():
+class UserFinder():
     def __init__(self, names):
         self.names_db = names        
     
@@ -16,5 +16,3 @@ class NameMatcher():
     # size 查询的数据条数,默认3条
     def get_match_names(name:str, size = 3) -> list[str]:
         pass
-
-    

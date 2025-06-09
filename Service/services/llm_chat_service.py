@@ -8,22 +8,19 @@ from Service.model.intent_enum import IntentEnum, intent_enum_values
 # 和大语言模型聊天
 # request 学校, 用户, 消息, 上下文
 async def llm_chat(request: LLMChatRequest) -> str:
-    try:
-        # 1.意图识别
-        intent_type = await __get_intent(request=request)
-        # 当意图为查询预约咨询信息时
-        if intent_type is IntentEnum.Appointment:
-            __get_appointment()
-        # if intent_type is ...
-        #     ...
+    # 1.意图识别
+    intent_type = await __get_intent(request=request)
+    # 当意图为查询预约咨询信息时
+    if intent_type is IntentEnum.Appointment:
+        __get_appointment()
+    # if intent_type is ...
+    #     ...
         
-        # todo 2.实体提取
-        # todo 3.数据查询
-        # todo 4.知识检索
-        # todo 5.构建prompt
-        # todo 6.询问llm返回结果
-    except:
-        raise "Error Uploading the transcription."
+     # todo 2.实体提取
+    # todo 3.数据查询
+    # todo 4.知识检索
+    # todo 5.构建prompt
+    # todo 6.询问llm返回结果
     return ""
 
 # 意图识别提示词
@@ -31,10 +28,7 @@ intent_prompt = f"请判断用户的意图, 仅从以下类别中选择一个: f
 
 # 判断意图
 async def __get_intent(request: LLMChatRequest) -> IntentEnum:
-    try:
-        response_text = chatbot(context=request.context, prompt = intent_prompt, query=request.query)
-    except:
-        raise "Error Uploading the transcription."
+    response_text = chatbot(context=request.context, prompt = intent_prompt, query=request.query)
     return IntentEnum(response_text)
 
 # 实体提取提示词
@@ -42,13 +36,10 @@ entity_prompt = f"你是一个信息抽取助手,任务是从用于输入的文�
 
 # 获取实体
 async def __get_entity(request: LLMChatRequest) -> Entity:
-    try:
-        response_text = chatbot(context=request.context, prompt = entity_prompt, query=request.query)
-        response_json = json.loads(response_text)
-        e = Entity()
-        e.user_name = response_json.get(EntityEnum.person.name)
-    except:
-        raise "Error Uploading the transcription."
+    response_text = chatbot(context=request.context, prompt = entity_prompt, query=request.query)
+    response_json = json.loads(response_text)
+    e = Entity()
+    e.user_name = response_json.get(EntityEnum.person.name)
     return e
 
 # 生成个人报告
