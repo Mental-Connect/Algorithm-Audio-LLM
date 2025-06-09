@@ -19,3 +19,5 @@ PyJWT == 2.8.0
 audioread == 3.0.1
 pytest
 websocket-client==1.8.0
+faiss-cpu==1.26.4
+sentence-transformers==4.1.0

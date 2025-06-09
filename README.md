@@ -152,3 +152,9 @@ docker save -o algorithm-llm .;
  docker run -d --name algorithm-llm-audio-fastapi --restart=unless-stopped -p 8000:8000 -p 8001:8001 --gpus all  algorithm-llm
 ```
 运行时,在4核情况下至少需要有11G空闲内存可使用,否则可能导致服务器宕机
+
+## 心语小智
+
+对于传入的消息,使用如下处理流程
+```text
+[开始] --> [意图识别]  --> [实体提取] --> [数据库实体搜索]  --> [知识搜索]  --> [prompt构建] --> [询问llm]
