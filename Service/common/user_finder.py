@@ -68,3 +68,6 @@ class UserFinder():
         
         # 排序并返回
         return sorted(scored,key=lambda x: x[1], reverse=True)[:size]
+
+# 学生查询类单例
+user_finder = UserFinder()
