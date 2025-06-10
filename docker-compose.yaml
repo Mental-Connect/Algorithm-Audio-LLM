@@ -2,16 +2,17 @@ version: '3.8'
 
 services:
   fastapi:
-    build: .
+    image: algorithm-llm-audio-fastapi
+    container_name: algorithm-llm-audio-fastapi
     ports:
       - "8000:8000"
+      - "8001:8001"
+    deploy:
+    resources:
+      reservations:
+        devices:
+          - capabilities: [gpu]
     environment:
       - FASTAPI_ENV=production
     depends_on:
       - websocket
-
-  websocket:
-    build: .
-    command: ["python3", "-m", "Service.main"]  # Run the main.py to start the WebSocket service
-    ports:
-      - "8001:8001"
