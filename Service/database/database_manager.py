@@ -1,3 +1,4 @@
+from numpy import pad
 from pymongo import MongoClient
 from Service.common.constants import mongo_connect_str,default_db,secret_key
 from base64 import b64decode, b64encode
@@ -11,19 +12,6 @@ class DatabaseManager():
     def __init__(self) -> None:
         self.client = MongoClient(mongo_connect_str)  # 初始化连接
         self.db = self.__get_db()  # 初始化默认数据库
-    
-    # insert the data method.
-    def insert_data():
-        pass
-
-    # remove the data method.
-    def remove_data():
-        pass
-
-    
-    # Update the data method
-    def update_data():
-        pass
     
     # 根据姓名查询学生
     # name 学生姓名
@@ -72,10 +60,15 @@ class DatabaseManager():
         collection_names = self.db.list_collection_names()
         return [self.__decrypt_data(name) for name in collection_names if name.startswith(self.school_user_collection_prefix)]
 
-    # 获取学生的最新预约访谈信息
+    # 获取学生的最新的已完成访谈数据
     def get_student_appointment(self, user_id) ->dict:
         collection = self.db[self.appointment_collection]
         interview = collection.find_one({"schoolUserId": user_id, "status":"Scheduled"}, sort=[("timeStamp", -1)])
+        return dict(interview) if interview else None
+    
+    def get_student_interviews(self, user_id) -> dict:
+        collection = self.db[self.appointment_collection]
+        interview = collection.find_one({"schoolUserId": user_id, "status":"Completed"}, sort=[("timeStamp", -1)])
         return dict(interview) if interview else None
     
     # 获取指定数据库名的数据库对象
