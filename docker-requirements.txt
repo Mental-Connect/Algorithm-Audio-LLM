@@ -21,3 +21,5 @@ pytest
 websocket-client==1.8.0
 faiss-cpu==1.26.4
 sentence-transformers==4.1.0
+pypinyin==0.54.0
+rapidfuzz==3.13.0

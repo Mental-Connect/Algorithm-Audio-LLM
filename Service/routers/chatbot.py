@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from Service.common.http.chatbot_request import ChatbotRequest
 from Service.common.http.chatbot_response import ChatbotResponse
-from Service.common.http.llm_ask_request import LLMChatRequest
+from Service.common.http.llm_chat_request import LLMChatRequest
 from Service.services.chatbot_service import chatbot_service_logic
 from Service.services.llm_chat_service import llm_chat
 
