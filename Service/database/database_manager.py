@@ -1,14 +1,16 @@
-from numpy import pad
-from pymongo import MongoClient
-from Service.common.constants import mongo_connect_str,default_db,secret_key
 from base64 import b64decode, b64encode
 from Crypto.Cipher import Blowfish
+from numpy import pad
+from pymongo import MongoClient
+from Service.common.constants import default_db,mongo_connect_str,secret_key
 
 
 class DatabaseManager():
-    school_user_collection_prefix = "school_user_"
-    account_collection = "account"
-    appointment_collection = "appointment"
+    school_user_collection_prefix = "school_user_"  # 学生表前缀
+    account_collection = "account"  # 管理员表名
+    appointment_collection = "appointment"  # 预约咨询表名
+    
+    # 初始化数据库连接
     def __init__(self) -> None:
         self.client = MongoClient(mongo_connect_str)  # 初始化连接
         self.db = self.__get_db()  # 初始化默认数据库

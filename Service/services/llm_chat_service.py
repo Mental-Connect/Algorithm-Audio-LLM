@@ -1,11 +1,10 @@
 ﻿import json
-from Service.model.entity import Entity
 from Service.common.http.llm_chat_request import LLMChatRequest
-from Service.model.chatbot import chatbot
-from Service.model.entity import EntityEnum, entity_enum_values
-from Service.model.intent_enum import IntentEnum, intent_enum_values
-from Service.database.database_manager import databae_manager
 from Service.common.user_finder import user_finder
+from Service.database.database_manager import databae_manager
+from Service.model.chatbot import chatbot
+from Service.model.entity import EntityEnum, entity_enum_values, Entity
+from Service.model.intent_enum import IntentEnum, intent_enum_values
 
 # 和大语言模型聊天
 # request 学校, 用户, 消息, 上下文
@@ -16,14 +15,14 @@ async def llm_chat(request: LLMChatRequest) -> str:
     # 对不同意图做不同处理
     match intent_type:
         # 当意图为查询预约咨询信息时
-        case IntentEnum.Appointment:
-            return __get_appointment(request=request)
         case IntentEnum.Chat:
             return __chit_chat(request=request)
         case IntentEnum.Query:
             return __get_user_info(request=request)
         case IntentEnum.Report:
             return __generate_report(request=request)
+        case IntentEnum.Appointment:
+            return __get_appointment(request=request)
         case IntentEnum.Interview:
             return __get_interview(request=request)
     return ""
@@ -32,25 +31,13 @@ async def llm_chat(request: LLMChatRequest) -> str:
 async def __generate_report(request:LLMChatRequest):
     # 实体识别
     entity = await __get_entity(query=request.query)
-    users = await __get_users(name=entity.user_name, school_id=request.school_id)
+    users = await user_finder.get_users(name=entity.user_name, school_id=request.school_id)
     result = ""
     for user in users:
         # todo ai 整理心理健康问题
         # todo 搜索知识
         result = f"{result}\n\t"
     
-    return result
-
-# 获取用户基本信息
-async def __get_user_info(request: LLMChatRequest):
-    # 实体识别
-    entity = await __get_entity(query=request.query)
-    users = await __get_users(name=entity.user_name, school_id=request.school_id)
-    result = ""
-    for user in users:
-        # todo ai整理用户信息
-        # user_info = 
-        result = f"{result}\n\t"
     return result
     
 # 闲聊
@@ -59,11 +46,23 @@ def __chit_chat(request: LLMChatRequest) -> str:
     result = chatbot(context=request.context, prompt=prompt, query=request.query)
     return result
 
+# 获取用户基本信息
+async def __get_user_info(request: LLMChatRequest):
+    # 实体识别
+    entity = await __get_entity(query=request.query)
+    users = await user_finder.get_users(name=entity.user_name, school_id=request.school_id)
+    result = ""
+    for user in users:
+        # todo ai整理用户信息
+        # user_info = 
+        result = f"{result}\n\t"
+    return result
+
 # 查询预约信息
 async def __get_appointment(request: LLMChatRequest) -> str:
     # 实体识别
     entity = await __get_entity(query=request.query)
-    users = await __get_users(entity.user_name)
+    users = await user_finder.get_users(entity.user_name)
     
     result = ""
     # 返回所有人的最新预约信息
@@ -78,7 +77,7 @@ async def __get_appointment(request: LLMChatRequest) -> str:
 async def __get_interview(request: LLMChatRequest):
     # 实体识别
     entity = await __get_entity(query=request.query)
-    users = await __get_users(entity.user_name)
+    users = await user_finder.get_users(entity.user_name)
     
     result = ""
     # 返回所有人的最新预约信息
@@ -89,18 +88,7 @@ async def __get_interview(request: LLMChatRequest):
             result = f"{result}\n\t"
     return result
 
-# 根据姓名查询用户
-# 查询不到就查询相似姓名的用户
-async def __get_users(name:str, school_id:str):
-    # 数据库查询该用户
-    users = []
-    users.append(databae_manager.get_school_user(name=name, school_id=school_id))
-    # 数据库中没有该用户时查询相似姓名的用户
-    if len(users) == 0:
-        user_names = user_finder.get_match_names(name)
-        for user_name in user_names:
-            users.append(databae_manager.get_school_user(user_name, school_id))
-            
+         
 # 判断意图
 async def __get_intent(request: LLMChatRequest) -> IntentEnum:
     # 意图识别提示词
